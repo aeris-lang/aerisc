@@ -1,4 +1,5 @@
 import subprocess
+import os
 
 def cmd(cmd:str) -> str:
     try:
@@ -7,3 +8,7 @@ def cmd(cmd:str) -> str:
 
     except subprocess.CalledProcessError as e:
         return e.stderr.decode().strip()
+
+def clear() -> None:
+    os.system("clear")
+    return
