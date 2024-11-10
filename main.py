@@ -1,16 +1,15 @@
 import os
 from typing import List
-from util import shell
 
 def build() -> None:
     os.makedirs("out", exist_ok = True)
     os.makedirs("out/tmp", exist_ok = True)
-    shell.cmd("clang -c src/main.c -o out/tmp/main.o")
-    shell.cmd("clang out/tmp/main.o -o out/aerisc")
+    os.system("clang -c src/main.c -o out/tmp/main.o")
+    os.system("clang out/tmp/main.o -o out/aerisc")
     return
 
 def acquireArgs(args:List[str] = []) -> List[str]:
-    shell.clear()
+    os.system("clear")
     userInput:str = input (
         f"Current: {args}\n"
         "Leave empty to run\n"
@@ -20,11 +19,11 @@ def acquireArgs(args:List[str] = []) -> List[str]:
     return acquireArgs(args) if userInput else args
 
 def run() -> None:
-    cmd:str = "./out/aerisc"
+    cmd:str = "out/aerisc"
     for arg in acquireArgs():
         cmd += " " + arg
-    shell.clear()
-    print(shell.cmd(cmd))
+    os.system("clear")
+    os.system(cmd)
     return
 
 def main() -> None:
@@ -40,20 +39,20 @@ def main() -> None:
         case "0": pass
 
         case "1":
-            shell.clear()
+            os.system("clear")
             build()
 
         case "2":
-            shell.clear()
+            os.system("clear")
             run()
 
         case "3":
-            shell.clear()
+            os.system("clear")
             build()
             run()
 
         case _:
-            shell.clear()
+            os.system("clear")
             print("Invalid Argument!\n")
             main()
 
