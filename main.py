@@ -4,8 +4,13 @@ from typing import List
 def build() -> None:
     os.makedirs("out", exist_ok = True)
     os.makedirs("out/tmp", exist_ok = True)
+
     os.system("clang -c src/main.c -o out/tmp/main.o")
-    os.system("clang out/tmp/main.o -o out/aerisc")
+    os.system("clang -c src/tokenize/tokenize.c -o out/tmp/tokenize.o")
+    os.system("clang -c src/commands/commands.c -o out/tmp/commands.o")
+
+    objects:str = "out/tmp/main.o out/tmp/tokenize.o out/tmp/commands.o"
+    os.system(f"clang {objects} -o out/aerisc")
     return
 
 def acquireArgs(args:List[str] = []) -> List[str]:
