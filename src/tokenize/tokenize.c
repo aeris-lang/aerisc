@@ -7,13 +7,16 @@ bool peak (
     long *index,
     char desiredPeak[],
     long *sourceC,
-    char **sourceV
+    char **sourceV,
+    struct Token *token
 ) {
     long cachedIndex = *index;
 
     for (int i = 0; i < strlen(desiredPeak); i++) {
         if (cachedIndex >= *sourceC) return false;
-        if ((*sourceV)[cachedIndex++] != desiredPeak[i]) return false;
+        if ((*sourceV)[cachedIndex] != desiredPeak[i]) return false;
+        token->content[i] = ((*sourceV)[cachedIndex++]);
+        token->content[i+1] = '\0';
     }
 
     *index = --cachedIndex;
@@ -24,21 +27,21 @@ bool tokenize (
     long *sourceC,
     char **sourceV,
     long *outTokenC,
-    enum Token *outTokenV[]
+    struct Token *outTokenV[]
 ) {
     *outTokenC = 0;
-    *outTokenV = malloc(*sourceC * sizeof(enum Token));
+    *outTokenV = malloc(*sourceC * sizeof(struct Token));
 
-    #define PEAK(desiredPeak, Token)                \
-    if (peak(&l, desiredPeak, sourceC, sourceV)) {  \
-        (*outTokenV)[(*outTokenC)++] = Token;           \
-        continue;                                   \
+    #define PEAK(desiredPeak, Token)                                            \
+    if (peak(&l, desiredPeak, sourceC, sourceV, &(*outTokenV)[*outTokenC])) {   \
+        (*outTokenV)[(*outTokenC)++].type = Token;                              \
+        continue;                                                               \
     }
 
     #define CASE(char, peaks)   \
     case char: {                \
         peaks                   \
-        return false;           \
+        break;                  \
     }
 
     for (long l = 0; l < *sourceC; l++) {
@@ -67,6 +70,17 @@ bool tokenize (
             CASE('[', PEAK("[", OPENING_SQUARE))
             CASE(']', PEAK("", CLOSING_SQUARE))
         }
+
+        int index = 0;
+        do {
+            (*outTokenV)[*outTokenC].content[index++] = (*sourceV)[l++];
+        } while (
+            ((*sourceV)[l] >= 'A' && (*sourceV)[l] <= 'Z')
+        ||  ((*sourceV)[l] >= 'a' && (*sourceV)[l] <= 'z')
+        );
+        (*outTokenV)[*outTokenC].content[index] = '\0';
+        (*outTokenV)[(*outTokenC)++].type = IDENTIFIER;
+        l--;
     }
 
     return true;

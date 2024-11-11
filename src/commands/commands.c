@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <string.h>
 #include "commands.h"
 #include "../tokenize/tokenize.h"
 
@@ -62,12 +63,14 @@ int transpile(const char path[]) {
     }
 
     long tokenC = 0;
-    enum Token *tokenV;
+    struct Token *tokenV;
     if (!tokenize(&contentC, &contentV, &tokenC, &tokenV)) {
         free(contentV);
+        free(tokenV);
         return -1;
     }
 
     free(contentV);
+    free(tokenV);
     return 0;
 }

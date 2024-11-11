@@ -6,12 +6,13 @@ bool peak (
     long *index,
     char desiredPeak[],
     long *sourceC,
-    char **sourceV
+    char **sourceV,
+    struct Token *token
 );
 
 bool tokenize (
     long *sourceC,
     char **sourceV,
     long *outTokenC,
-    enum Token *outTokenV[]
+    struct Token *outTokenV[]
 );

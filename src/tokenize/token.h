@@ -1,7 +1,7 @@
 #pragma once
 
-enum Token {
-// Formatting
+enum TokenType {
+    IDENTIFIER,
     WHITESPACE,
 
 // Keywords
@@ -31,4 +31,9 @@ enum Token {
         CLOSING_PARENTHESES,
         OPENING_SQUARE,
         CLOSING_SQUARE
+};
+
+struct Token {
+    enum TokenType type;
+    char content[63];
 };
